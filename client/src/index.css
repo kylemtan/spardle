@@ -298,12 +298,15 @@ a:hover {
   min-height: 48px;
 }
 .lobby-player {
+  display: flex;
+  align-items: center;
   padding: 8px 16px;
   background: var(--bg-panel);
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   font-size: 0.875rem;
   color: var(--text);
+  line-height: 1;
 }
 
 .lobby-error {

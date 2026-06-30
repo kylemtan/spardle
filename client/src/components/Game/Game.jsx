@@ -68,6 +68,7 @@ export default function Game({ socket, username, room, users, setUsers, words, s
   const wordsRef = useRef(words);
   const roomRef = useRef(room);
   const isRevealingRef = useRef(false);
+  const submitGuessRef = useRef(null);
 
   useEffect(() => { wordsRef.current = words; }, [words]);
   useEffect(() => { roomRef.current = room; }, [room]);
@@ -113,6 +114,9 @@ export default function Game({ socket, username, room, users, setUsers, words, s
     );
     resetBoard();
   }
+
+  // Always keep ref pointing to latest submitGuess (fixes stale closure in handleKey)
+  submitGuessRef.current = submitGuess;
 
   function submitGuess() {
     const row = activeRowRef.current;
@@ -197,7 +201,7 @@ export default function Game({ socket, username, room, users, setUsers, words, s
         return;
       }
       if (key === "ENTER") {
-        submitGuess();
+        submitGuessRef.current();
         return;
       }
       const letter = key.toUpperCase();

@@ -1,18 +1,22 @@
 const express = require("express");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const words = require("./data/words");
 
 const PORT = process.env.PORT || 1337;
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const DEV_ORIGIN = process.env.DEV_ORIGIN || "http://localhost:5173";
+const CLIENT_BUILD = path.resolve(__dirname, "..", "client", "dist");
 
 const app = express();
-app.use(cors({ origin: CLIENT_ORIGIN }));
+// Allow the Vite dev server origin in development; in production same-origin so no CORS needed
+app.use(cors({ origin: DEV_ORIGIN }));
+app.use(express.static(CLIENT_BUILD));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: CLIENT_ORIGIN, methods: ["GET", "POST"] },
+  cors: { origin: DEV_ORIGIN, methods: ["GET", "POST"] },
 });
 
 // rooms[roomName] = { users: [{id, username, score}], active: bool, words: [] }
@@ -143,6 +147,11 @@ io.on("connection", (socket) => {
       io.in(roomName).emit(event, safeUsers(roomName));
     }
   });
+});
+
+// SPA fallback — serve index.html for all non-socket routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(CLIENT_BUILD, "index.html"));
 });
 
 server.listen(PORT, () => console.log(`Spardle server running on port ${PORT}`));

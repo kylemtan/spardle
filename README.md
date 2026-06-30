@@ -14,30 +14,22 @@ spardle/
 
 ```bash
 # Terminal 1 — server
-cd server && npm install && npm run dev
+cd server && npm install && node server.js
 
-# Terminal 2 — client
-cd client && npm install && npm run dev
+# Terminal 2 — client (set server URL so the dev client finds the local server)
+cd client && npm install && VITE_SERVER_URL=http://localhost:1337 npx vite
 ```
 
-The client defaults to `http://localhost:1337` for the server.
+## Render deployment (single Web Service)
 
-## Render deployment
-
-### Server (Web Service)
-- Root directory: `server`
-- Build command: `npm install`
-- Start command: `node server.js`
+- Root directory: *(leave blank — repo root)*
+- Build command: `npm run build`
+- Start command: `npm start`
 - Environment variables:
   - `PORT` — set automatically by Render
-  - `CLIENT_ORIGIN` — your Render Static Site URL (e.g. `https://spardle.onrender.com`)
+  - `NODE_ENV` — set to `production`
 
-### Client (Static Site)
-- Root directory: `client`
-- Build command: `npm install && npm run build`
-- Publish directory: `dist`
-- Environment variables:
-  - `VITE_SERVER_URL` — your Render Web Service URL (e.g. `https://spardle-server.onrender.com`)
+No other env vars needed. The client connects to the same origin in production.
 
 ## Game rules
 
