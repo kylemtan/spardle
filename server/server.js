@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
   // ── Start game ────────────────────────────────────────────────────────────
   socket.on("start game", (roomName) => {
     if (!rooms[roomName]) return;
-    if (rooms[roomName].users.length < 2) {
+    if (rooms[roomName].users.length < 1) {
       socket.emit("not enough players");
       return;
     }
